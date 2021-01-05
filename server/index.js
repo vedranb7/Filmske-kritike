@@ -9,11 +9,11 @@ import reviewRoutes from "./routes/reviews.js";
 const app = express();
 dotenv.config();
 
-app.use("/reviews", reviewRoutes);
-
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
+
+app.use("/reviews", reviewRoutes);
 
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
