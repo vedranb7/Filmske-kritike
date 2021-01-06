@@ -11,3 +11,12 @@ export const getReviews = () => async (dispatch) => {
     console.log(error.message);
   }
 };
+
+export const createReview = (review) => async (dispatch) => {
+  try {
+    const { data } = await api.createReview(review);
+    dispatch({ type: "CREATE", payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
