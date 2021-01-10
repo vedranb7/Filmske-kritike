@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Review from "./Review/Review";
 import makeStyles from "./styles";
 
-const Reviews = () => {
+const Reviews = ({ currentId, setCurrentId }) => {
   const reviews = useSelector((state) => state.reviews);
   const classes = makeStyles();
 
@@ -22,7 +22,7 @@ const Reviews = () => {
     >
       {reviews.map((review) => (
         <Grid key={review._id} item xs={12} sm={6} lg={4}>
-          <Review review={review} />
+          <Review review={review} setCurrentId={setCurrentId} />
         </Grid>
       ))}
     </Grid>

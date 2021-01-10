@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import makeStyles from "./styles";
-import { createReview } from "../../actions/reviews";
+import { createReview, updateReview } from "../../actions/reviews";
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const [reviewData, setReviewData] = useState({
     title: "",
     review: "",
@@ -14,14 +14,36 @@ const Form = () => {
     tags: "",
     selectedFile: "",
   });
+  const review = useSelector((state) =>
+    currentId ? state.reviews.find((r) => r._id === currentId) : null
+  );
   const classes = makeStyles();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (review) setReviewData(review);
+  }, [review]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createReview(reviewData));
+
+    if (currentId) {
+      dispatch(updateReview(currentId, reviewData));
+    } else {
+      dispatch(createReview(reviewData));
+    }
+    clear();
   };
 
-  const clear = () => {};
+  const clear = () => {
+    setCurrentId(null);
+    setReviewData({
+      title: "",
+      review: "",
+      rating: "",
+      tags: "",
+      selectedFile: "",
+    });
+  };
   return (
     <Paper className={classes.paper}>
       <form
@@ -30,7 +52,9 @@ const Form = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Dodavanje filma</Typography>
+        <Typography variant="h6">
+          {currentId ? "Izmjena" : "Dodavanje"} kritike
+        </Typography>
         <TextField
           name="title"
           variant="outlined"
