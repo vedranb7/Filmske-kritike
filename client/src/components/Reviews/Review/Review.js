@@ -10,9 +10,13 @@ import {
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import makeStyles from "./styles";
+import { useDispatch } from "react-redux";
+
+import { deleteReview } from "../../../actions/reviews";
 
 const Review = ({ review, setCurrentId }) => {
   const classes = makeStyles();
+  const dispatch = useDispatch();
   return (
     <Card className={classes.card}>
       <CardMedia
@@ -49,7 +53,11 @@ const Review = ({ review, setCurrentId }) => {
           <CreateIcon fontSize="small" />
           Izmjena
         </Button>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button
+          size="small"
+          color="primary"
+          onClick={() => dispatch(deleteReview(review._id))}
+        >
           <DeleteIcon fontSize="small" />
           Obriši
         </Button>
