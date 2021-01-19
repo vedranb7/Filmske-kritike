@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
-import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 
 import makeStyles from "./styles";
@@ -12,8 +11,9 @@ const Form = ({ currentId, setCurrentId }) => {
     review: "",
     rating: "",
     tags: "",
-    selectedFile: "",
+    poster: "",
   });
+
   const review = useSelector((state) =>
     currentId ? state.reviews.find((r) => r._id === currentId) : null
   );
@@ -41,7 +41,7 @@ const Form = ({ currentId, setCurrentId }) => {
       review: "",
       rating: "",
       tags: "",
-      selectedFile: "",
+      poster: "",
     });
   };
   return (
@@ -92,18 +92,19 @@ const Form = ({ currentId, setCurrentId }) => {
           fullWidth
           value={reviewData.tags}
           onChange={(e) =>
-            setReviewData({ ...reviewData, tags: e.target.value })
+            setReviewData({ ...reviewData, tags: e.target.value.split(",") })
           }
         />
-        <div className={classes.fileInput}>
-          <FileBase
-            type="file"
-            multiple={false}
-            onDone={({ base64 }) =>
-              setReviewData({ ...reviewData, selectedFile: base64 })
-            }
-          />
-        </div>
+        <TextField
+          name="poster"
+          variant="outlined"
+          label="Link postera"
+          fullWidth
+          value={reviewData.poster}
+          onChange={(e) =>
+            setReviewData({ ...reviewData, poster: e.target.value })
+          }
+        />
         <Button
           className={classes.buttonSubmit}
           variant="contained"
@@ -112,7 +113,7 @@ const Form = ({ currentId, setCurrentId }) => {
           type="submit"
           fullWidth
         >
-          Dodaj kritiku
+          {currentId ? "Spremi izmjenu" : "Dodaj kritiku"}
         </Button>
         <Button
           variant="contained"

@@ -21,7 +21,7 @@ const Review = ({ review, setCurrentId }) => {
     <Card className={classes.card}>
       <CardMedia
         className={classes.media}
-        image={review.selectedFile}
+        image={review.poster}
         title={review.title}
       />
       <div className={classes.overlay}>
@@ -40,7 +40,7 @@ const Review = ({ review, setCurrentId }) => {
         </Typography>
       </div>
       <CardContent className={classes.content}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="body2" component="p">
           {review.review}
         </Typography>
       </CardContent>

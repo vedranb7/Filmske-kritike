@@ -5,11 +5,7 @@ const reviewSchema = mongoose.Schema({
   review: String,
   rating: Number,
   tags: [String],
-  selectedFile: String,
-  likeCount: {
-    type: Number,
-    default: 0,
-  },
+  poster: String,
   createdAt: {
     type: Date,
     default: new Date(),
