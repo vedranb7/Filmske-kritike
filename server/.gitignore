@@ -13,6 +13,7 @@
 
 # misc
 .DS_Store
+Procfile
 .env
 .env.local
 .env.development.local

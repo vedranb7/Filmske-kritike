@@ -15,6 +15,10 @@ app.use(cors());
 
 app.use("/reviews", reviewRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hello - Filmske kritike API");
+});
+
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
 
