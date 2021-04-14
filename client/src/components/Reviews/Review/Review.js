@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { deleteReview } from "../../../actions/reviews";
 
 const Review = ({ review, setCurrentId }) => {
+  const user = JSON.parse(localStorage.getItem("profile"));
+
   const classes = makeStyles();
   const dispatch = useDispatch();
   return (
@@ -45,22 +47,29 @@ const Review = ({ review, setCurrentId }) => {
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => setCurrentId(review._id)}
-        >
-          <CreateIcon fontSize="small" />
-          Izmjena
-        </Button>
-        <Button
-          size="small"
-          color="primary"
-          onClick={() => dispatch(deleteReview(review._id))}
-        >
-          <DeleteIcon fontSize="small" />
-          Obriši
-        </Button>
+        {(user?.result?.googleId === review?.creator ||
+          user?.result?._id === review?.creator) && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => setCurrentId(review._id)}
+          >
+            <CreateIcon fontSize="small" />
+            Izmjena
+          </Button>
+        )}
+
+        {(user?.result?.googleId === review?.creator ||
+          user?.result?._id === review?.creator) && (
+          <Button
+            size="small"
+            color="primary"
+            onClick={() => dispatch(deleteReview(review._id))}
+          >
+            <DeleteIcon fontSize="small" />
+            Obriši
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

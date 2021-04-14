@@ -1,4 +1,5 @@
 import express from "express";
+import auth from "../middleware/auth.js";
 import {
   getReviews,
   createReview,
@@ -9,8 +10,8 @@ import {
 const router = express.Router();
 
 router.get("/", getReviews);
-router.post("/", createReview);
-router.patch("/:id", updateReview);
-router.delete("/:id", deleteReview);
+router.post("/", auth, createReview);
+router.patch("/:id", auth, updateReview);
+router.delete("/:id", auth, deleteReview);
 
 export default router;

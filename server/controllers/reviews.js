@@ -14,7 +14,11 @@ export const getReviews = async (req, res) => {
 export const createReview = async (req, res) => {
   const review = req.body;
 
-  const newReview = new ReviewInfo(review);
+  const newReview = new ReviewInfo({
+    ...review,
+    creator: req.userId,
+    createdAt: new Date().toISOString(),
+  });
   try {
     await newReview.save();
 

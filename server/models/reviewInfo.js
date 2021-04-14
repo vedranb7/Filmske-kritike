@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 const reviewSchema = mongoose.Schema({
   title: String,
   review: String,
+  name: String,
+  creator: String,
   rating: Number,
   tags: [String],
   poster: String,

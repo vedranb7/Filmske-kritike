@@ -1,13 +1,37 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import decode from "jwt-decode";
 import makeStyles from "./styles";
 import logo from "../../images/logo.png";
 
 const Navbar = () => {
   const classes = makeStyles();
 
-  const user = null;
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const logout = () => {
+    dispatch({ type: "LOGOUT" });
+    history.push("/");
+
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const token = user?.token;
+
+    //JWT token
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
+
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
       <div className={classes.brandContainer}>
@@ -39,6 +63,7 @@ const Navbar = () => {
               variant="contained"
               className={classes.logout}
               color="secondary"
+              onClick={logout}
             >
               Odjavi se
             </Button>

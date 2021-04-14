@@ -7,26 +7,69 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
+import { GoogleLogin } from "react-google-login";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 import makeStyles from "./styles";
 import Input from "./Input";
+import { signin, signup } from "../../actions/auth";
 
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 const Auth = () => {
   const classes = makeStyles();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isSignup, setIsSignup] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isSignup) {
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
+  };
 
-  const handleChange = () => {};
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
-    handleShowPassword(false);
+    setShowPassword(false);
+  };
+
+  const googleSuccess = async (res) => {
+    const result = res?.profileObj;
+    const token = res?.tokenId;
+
+    try {
+      dispatch({ type: "AUTH", data: { result, token } });
+
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleFailure = (error) => {
+    console.log(error);
+    console.log(
+      "Google prijava nije bila uspješna. Pokušajte ponovno kasnije."
+    );
   };
   return (
     <Container component="main" maxWidth="xs">
@@ -49,7 +92,7 @@ const Auth = () => {
                   half
                 />
                 <Input
-                  name="firstName"
+                  name="lastName"
                   label="Prezime"
                   handleChange={handleChange}
                   half
@@ -87,6 +130,26 @@ const Auth = () => {
           >
             {isSignup ? "Registriraj se" : "Prijavi se"}
           </Button>
+          <GoogleLogin
+            clientId="750592644156-36lhnjgfdh9eonc9psr2tcrd9st8v13s.apps.googleusercontent.com"
+            render={(renderProps) => (
+              <Button
+                className={classes.googleButton}
+                color="primary"
+                fullWidth
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                startIcon={<icon />}
+                variant="contained"
+              >
+                Prijavi se sa Google računom
+              </Button>
+            )}
+            onSuccess={googleSuccess}
+            onFailure={googleFailure}
+            cookiePolicy="single_host_origin"
+          />
+
           <Grid container justify="flex-end">
             <Grid item>
               <Button onClick={switchMode}>

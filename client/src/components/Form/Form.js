@@ -13,6 +13,7 @@ const Form = ({ currentId, setCurrentId }) => {
     tags: "",
     poster: "",
   });
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   const review = useSelector((state) =>
     currentId ? state.reviews.find((r) => r._id === currentId) : null
@@ -27,9 +28,11 @@ const Form = ({ currentId, setCurrentId }) => {
     e.preventDefault();
 
     if (currentId) {
-      dispatch(updateReview(currentId, reviewData));
+      dispatch(
+        updateReview(currentId, { ...reviewData, name: user?.result?.name })
+      );
     } else {
-      dispatch(createReview(reviewData));
+      dispatch(createReview({ ...reviewData, name: user?.result?.name }));
     }
     clear();
   };
@@ -44,6 +47,16 @@ const Form = ({ currentId, setCurrentId }) => {
       poster: "",
     });
   };
+
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Molimo Vas da se ulogirate da dodate svoje kritike.
+        </Typography>
+      </Paper>
+    );
+  }
   return (
     <Paper className={classes.paper}>
       <form
